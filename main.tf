@@ -28,3 +28,28 @@ provider "vault" {
   address = "http://127.0.0.1:8200"
   token   = "root-token"
 }
+
+resource "docker_image" "ssh_server" {
+  name = "ssh-server"
+  build {
+    path = "docker/ssh"
+    tag  = ["flxptrs/openssh:alpine"]
+    label = {
+      # Dirty hack to force rebuild image on changed files
+      hash: sha256(file("docker/ssh/Dockerfile"))
+      hash2: sha256(file("docker/ssh/docker-entrypoint.sh")) 
+    }
+  }
+}
+
+resource "docker_container" "ssh_server" {
+  name  = "ssh-server"
+  image = docker_image.ssh_server.latest
+  ports {
+    internal = 22
+    external = 2222
+  }
+  env  = [
+    "SSH_TRUSTED_USER_CA_KEYS=${vault_ssh_secret_backend_ca.ssh.public_key}"
+  ]
+}

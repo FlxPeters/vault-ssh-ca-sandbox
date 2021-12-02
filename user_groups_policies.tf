@@ -9,6 +9,7 @@ resource "vault_auth_backend" "userpass" {
 resource "vault_identity_group" "devops" {
   name     = "devops"
   type     = "internal"
+  external_member_entity_ids  = true
   policies = [vault_policy.manage_secrets_devops.name]
 
   metadata = {
@@ -47,4 +48,17 @@ resource "vault_identity_group_member_entity_ids" "devops_members" {
   exclusive         = true
   member_entity_ids = [vault_identity_entity.bob.id]
   group_id          = vault_identity_group.devops.id
+}
+
+// Policies
+data "vault_policy_document" "manage_secrets_devops" {
+  rule {
+    path         = "secret/*"
+    capabilities = ["create", "read", "update", "delete", "list"]
+    description  = "Allow management of all secrests for group devops"
+  }
+}
+resource "vault_policy" "manage_secrets_devops" {
+  name   = "manage_secrets_devops"
+  policy = data.vault_policy_document.manage_secrets_devops.hcl
 }

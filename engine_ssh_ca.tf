@@ -19,36 +19,38 @@ resource "vault_ssh_secret_backend_role" "devops_default" {
     backend                 = vault_mount.ssh.path
     key_type                = "ca"
     allow_user_certificates = true
+    // required for alpine open-ssh to work
+    algorithm_signer = "rsa-sha2-256"
     ttl = 120
     max_ttl = 3600
     allowed_extensions =  "permit-pty,permit-port-forwarding"  
     default_extensions =  { permit-pty = ""}
-    allowed_users = "devops"
-    default_user = "devops"
+    allowed_users = "ops"
+    default_user = "ops"
 }
 
-// Priviledged role for DevOps users linux servers
-// Should allow full access to linux servers
-resource "vault_ssh_secret_backend_role" "devops_admin" {
-    name                    = "devops-admin"
-    backend                 = vault_mount.ssh.path
-    key_type                = "ca"
-    allow_user_certificates = true
-    ttl = 120
-    max_ttl = 3600
-    allowed_users = "devops-admin"
-    default_user = "devops-admin"
-}
+// // Priviledged role for DevOps users linux servers
+// // Should allow full access to linux servers
+// resource "vault_ssh_secret_backend_role" "devops_admin" {
+//     name                    = "devops-admin"
+//     backend                 = vault_mount.ssh.path
+//     key_type                = "ca"
+//     allow_user_certificates = true
+//     ttl = 120
+//     max_ttl = 3600
+//     allowed_users = "devops-admin"
+//     default_user = "devops-admin"
+// }
 
-// Role to generate host keys
-resource "vault_ssh_secret_backend_role" "hostkeys" {
-    name                    = "hostkey"
-    backend                 = vault_mount.ssh.path
-    key_type                = "ca"
-    allow_user_certificates = false
-    allow_host_certificates = true
+// // Role to generate host keys
+// resource "vault_ssh_secret_backend_role" "hostkeys" {
+//     name                    = "hostkey"
+//     backend                 = vault_mount.ssh.path
+//     key_type                = "ca"
+//     allow_user_certificates = false
+//     allow_host_certificates = true
     
-    // Default TTF of 10 years
-    ttl = 60*60*24*365*10
-}
+//     // Default TTF of 10 years
+//     ttl = 60*60*24*365*10
+// }
 

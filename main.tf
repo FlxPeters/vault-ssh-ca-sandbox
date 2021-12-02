@@ -38,6 +38,7 @@ resource "docker_image" "ssh_server" {
       # Dirty hack to force rebuild image on changed files
       hash: sha256(file("docker/ssh/Dockerfile"))
       hash2: sha256(file("docker/ssh/docker-entrypoint.sh")) 
+      hash2: sha256(file("docker/ssh/sshd_config")) 
     }
   }
 }

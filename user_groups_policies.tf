@@ -10,7 +10,7 @@ resource "vault_identity_group" "devops" {
   name     = "devops"
   type     = "internal"
   external_member_entity_ids  = true
-  policies = [vault_policy.manage_secrets_devops.name]
+  policies = [vault_policy.manage_secrets_devops.name, vault_policy.sign_ssh_devops_default.name]
 
   metadata = {
     version = "2"
@@ -45,7 +45,7 @@ resource "vault_identity_entity_alias" "bob" {
 
 // Assign members to group
 resource "vault_identity_group_member_entity_ids" "devops_members" {
-  exclusive         = true
+  exclusive         = false
   member_entity_ids = [vault_identity_entity.bob.id]
   group_id          = vault_identity_group.devops.id
 }
@@ -61,4 +61,21 @@ data "vault_policy_document" "manage_secrets_devops" {
 resource "vault_policy" "manage_secrets_devops" {
   name   = "manage_secrets_devops"
   policy = data.vault_policy_document.manage_secrets_devops.hcl
+}
+
+data "vault_policy_document" "sign_ssh_devops_default" {
+  rule {
+    path         = "ssh/*"
+    capabilities = ["list"]
+    description  = "Allow list all SSH secret path"
+  }
+  rule {
+    path         = "ssh/sign/devops-default"
+    capabilities = ["create", "read", "update"]
+    description  = "Allow usage of SSH backend role devops-default"
+  }
+}
+resource "vault_policy" "sign_ssh_devops_default" {
+  name   = "sign_ssh_devops_default"
+  policy = data.vault_policy_document.sign_ssh_devops_default.hcl
 }

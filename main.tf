@@ -36,9 +36,9 @@ resource "docker_image" "ssh_server" {
     tag  = ["flxptrs/openssh:alpine"]
     label = {
       # Dirty hack to force rebuild image on changed files
-      hash: sha256(file("docker/ssh/Dockerfile"))
-      hash2: sha256(file("docker/ssh/docker-entrypoint.sh")) 
-      hash2: sha256(file("docker/ssh/sshd_config")) 
+      hash : sha256(file("docker/ssh/Dockerfile"))
+      hash2 : sha256(file("docker/ssh/docker-entrypoint.sh"))
+      hash2 : sha256(file("docker/ssh/sshd_config"))
     }
   }
 }
@@ -50,7 +50,7 @@ resource "docker_container" "ssh_server" {
     internal = 22
     external = 2222
   }
-  env  = [
+  env = [
     "SSH_TRUSTED_USER_CA_KEYS=${vault_ssh_secret_backend_ca.ssh.public_key}"
   ]
 }

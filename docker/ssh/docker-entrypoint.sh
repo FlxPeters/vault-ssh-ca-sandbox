@@ -17,4 +17,12 @@ if [ ! -f "/etc/ssh/ssh_host_dsa_key" ]; then
 	ssh-keygen -f /etc/ssh/ssh_host_dsa_key -N '' -t dsa
 fi
 
+# Add a generic user ops for operations department
+addgroup -S ops && adduser -S ops -G ops -s /bin/bash
+echo "ops:ops" | chpasswd
+
+mkdir -p /etc/ssh/auth_principals
+# Add ops and a demo gitlab project as valid principals for ops
+echo $'ops\ngitlab-project-id-22' > /etc/ssh/auth_principals/ops
+
 exec "$@"

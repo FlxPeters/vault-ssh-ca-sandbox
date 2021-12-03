@@ -7,10 +7,10 @@ resource "vault_auth_backend" "userpass" {
 
 // Use best practive to only apply policies to groups
 resource "vault_identity_group" "devops" {
-  name     = "devops"
-  type     = "internal"
-  external_member_entity_ids  = true
-  policies = [vault_policy.manage_secrets_devops.name, vault_policy.sign_ssh_devops_default.name]
+  name                       = "devops"
+  type                       = "internal"
+  external_member_entity_ids = true
+  policies                   = [vault_policy.manage_secrets_devops.name, vault_policy.sign_ssh_devops_default.name]
 
   metadata = {
     version = "2"
@@ -25,7 +25,6 @@ resource "vault_generic_endpoint" "user_bob" {
 
   data_json = jsonencode(
     {
-      policies = ["bob"],
       password = "bob"
   })
 }

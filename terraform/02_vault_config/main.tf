@@ -16,3 +16,11 @@ resource "vault_ssh_secret_backend_ca" "ssh" {
 resource "vault_auth_backend" "userpass" {
   type       = "userpass"
 }
+
+resource "vault_audit" "stdout" {
+  type = "file"
+  options = {
+    file_path = "stdout"
+    log_raw = true
+  }
+}

@@ -31,6 +31,7 @@ Docker containers are created using Terraform .This could have been done with Do
 * https://cottonlinux.com/ssh-certificates/
 * https://medium.com/uber-security-privacy/introducing-the-uber-ssh-certificate-authority-4f840839c5cc
 * https://engineering.fb.com/2016/09/12/security/scalable-and-secure-access-with-ssh/
+* https://medium.com/hashicorp-engineering/hashicorp-vault-ssh-ca-and-sentinel-79ea6a6960e5
 
 ## License
 

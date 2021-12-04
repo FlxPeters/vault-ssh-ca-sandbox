@@ -2,6 +2,10 @@ provider "docker" {
   host = "unix:///var/run/docker.sock"
 }
 
+resource "docker_network" "vault" {
+  name = "vault"
+}
+
 resource "docker_image" "vault" {
   name = "vault:1.9.0"
 }
@@ -19,5 +23,8 @@ resource "docker_container" "vault" {
   ]
   capabilities {
     add = ["IPC_LOCK"]
+  }
+  networks_advanced {
+    name = docker_network.vault.name
   }
 }

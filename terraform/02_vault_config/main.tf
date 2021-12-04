@@ -13,10 +13,16 @@ resource "vault_ssh_secret_backend_ca" "ssh" {
   generate_signing_key = true
 }
 
+// Auth backends
 resource "vault_auth_backend" "userpass" {
   type       = "userpass"
 }
 
+resource "vault_auth_backend" "approle" {
+  type = "approle"
+}
+
+// Audit log
 resource "vault_audit" "stdout" {
   type = "file"
   options = {
